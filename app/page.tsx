@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation'
 
 export default function HomePage() {
+  const router = useRouter()
   return (
     <main className="min-h-screen bg-slate-950 text-white flex flex-col items-center">
       {/* Hero Section */}
@@ -26,7 +28,7 @@ export default function HomePage() {
         </motion.p>
         <div className="flex justify-center gap-4 mt-8">
           <Button size="lg" className="bg-cyan-500 hover:bg-cyan-400 text-white">Launch Studio</Button>
-          <Button size="lg" variant="outline" className="border-cyan-500 text-cyan-400 hover:bg-cyan-900">View Docs</Button>
+          <Button size="lg" variant="outline" className="border-cyan-500 text-cyan-400 hover:bg-cyan-900" onClick={() => router.push('/docs')}>View Docs</Button>
         </div>
       </section>
 
