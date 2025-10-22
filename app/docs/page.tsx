@@ -462,13 +462,13 @@ async def delete_{{ENDPOINT_NAME}}(
 const docs: Doc[] = [
     { id: 'structure', icon: Layout, title: 'Structure.md', content: STRUCTURE_MD, desc: 'System architecture blueprint' },
     { id: 'features', icon: FileText, title: 'Features.md', content: FEATURES_MD, desc: 'Feature specifications' },
-    { id: 'templates', icon: Code, title: 'Templates.md', content: TEMPLATES_MD, desc: 'Code generation patterns' }
+    { id: 'templates', icon: Code, title: 'Templates.md', content: TEMPLATES_MD, desc: 'Code generation patterns' },
 ]
 
 const FeatureSection = ({ label, children }: { label: string; children: ReactNode }) => (
-    <div className="border-l-4 border-cyan-400 bg-cyan-50/50 px-6 py-4 rounded-r mb-4">
-        <div className="font-bold text-slate-800 text-lg mb-2">{label}</div>
-        <div className="text-slate-700 space-y-1">{children}</div>
+    <div className="border-l-4 border-cyan-400 bg-cyan-50/50 px-4 md:px-6 py-4 rounded-r mb-4">
+        <div className="font-bold text-slate-800 text-base md:text-lg mb-2">{label}</div>
+        <div className="text-slate-700 space-y-1 text-sm md:text-base">{children}</div>
     </div>
 )
 
@@ -480,11 +480,13 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
     const elements: ReactNode[] = []
 
     lines.forEach((line: string, i: number) => {
-        // Code block handling
         if (line.trim() === '```' || line.trim().startsWith('```')) {
             if (inCodeBlock) {
                 elements.push(
-                    <pre key={`code-${i}`} className="bg-slate-900 text-cyan-300 px-6 py-4 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed mb-6 border border-slate-700">
+                    <pre
+                        key={`code-${i}`}
+                        className="bg-slate-900 text-cyan-300 px-4 py-3 md:px-6 md:py-4 rounded-lg overflow-x-auto font-mono text-xs md:text-sm leading-relaxed mb-6 border border-slate-700"
+                    >
                         {codeLines.join('\n')}
                     </pre>
                 )
@@ -501,40 +503,33 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
             return
         }
 
-        // Headers
         if (line.startsWith('# ')) {
             elements.push(
-                <h1 key={i} className="text-4xl font-bold text-slate-900 mt-8 mb-6 pb-3 border-b-2 border-slate-200">
+                <h1 key={i} className="text-2xl md:text-4xl font-bold text-slate-900 mt-8 mb-4 md:mb-6 pb-2 border-b border-slate-200">
                     {line.slice(2)}
                 </h1>
             )
         } else if (line.startsWith('## ')) {
             elements.push(
-                <h2 key={i} className="text-2xl font-bold text-slate-800 mt-8 mb-5 flex items-center gap-3">
-                    <Sparkles className="w-6 h-6 text-cyan-500" />
+                <h2 key={i} className="text-xl md:text-2xl font-bold text-slate-800 mt-6 md:mt-8 mb-4 flex items-center gap-2 md:gap-3">
+                    <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-cyan-500" />
                     {line.slice(3)}
                 </h2>
             )
         } else if (line.startsWith('### ')) {
             elements.push(
-                <h3 key={i} className="text-xl font-semibold text-slate-700 mt-6 mb-3">
+                <h3 key={i} className="text-lg md:text-xl font-semibold text-slate-700 mt-4 md:mt-6 mb-2 md:mb-3">
                     {line.slice(4)}
                 </h3>
             )
-        }
-        // Feature sections
-        else if (line.startsWith('**') && line.includes(':**')) {
+        } else if (line.startsWith('**') && line.includes(':**')) {
             const match = line.match(/\*\*(.+?):\*\*(.*)/)
             if (match) {
                 currentSection = { label: match[1], content: [match[2].trim()] }
             }
-        }
-        // List items for feature sections
-        else if (line.trim().startsWith('- ') && currentSection) {
+        } else if (line.trim().startsWith('- ') && currentSection) {
             currentSection.content.push(line.trim().slice(2))
-        }
-        // Close feature section
-        else if (line.trim() === '' && currentSection) {
+        } else if (line.trim() === '' && currentSection) {
             const section = currentSection
             elements.push(
                 <FeatureSection key={`section-${i}`} label={section.label}>
@@ -547,15 +542,11 @@ const MarkdownRenderer = ({ content }: { content: string }) => {
                 </FeatureSection>
             )
             currentSection = null
-        }
-        // Horizontal rule
-        else if (line.trim() === '---') {
-            elements.push(<hr key={i} className="my-10 border-t-2 border-slate-200" />)
-        }
-        // Regular text
-        else if (line.trim() && !line.startsWith('**')) {
+        } else if (line.trim() === '---') {
+            elements.push(<hr key={i} className="my-8 md:my-10 border-t border-slate-200" />)
+        } else if (line.trim() && !line.startsWith('**')) {
             elements.push(
-                <p key={i} className="text-slate-600 leading-relaxed mb-4">
+                <p key={i} className="text-slate-600 text-sm md:text-base leading-relaxed mb-3 md:mb-4">
                     {line}
                 </p>
             )
@@ -571,33 +562,33 @@ export default function DocsPage() {
     return (
         <div className="min-h-screen bg-white">
             {!selected ? (
-                <div className="max-w-6xl mx-auto px-6 py-20">
-                    <div className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 bg-cyan-100 text-cyan-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+                    <div className="text-center mb-12 sm:mb-16">
+                        <div className="inline-flex items-center gap-2 bg-cyan-100 text-cyan-700 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium mb-4">
                             <Sparkles className="w-4 h-4" />
                             AI-Powered Architecture
                         </div>
-                        <h1 className="text-5xl font-bold text-slate-900 mb-4">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-3 sm:mb-4">
                             Documentation
                         </h1>
-                        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                        <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto px-2">
                             Explore how Archai thinks structurally and builds intelligently
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                         {docs.map(doc => {
                             const Icon = doc.icon
                             return (
                                 <button
                                     key={doc.id}
                                     onClick={() => setSelected(doc)}
-                                    className="group bg-white p-8 rounded-2xl border-2 border-slate-200 hover:border-cyan-400 hover:shadow-xl hover:shadow-cyan-100/50 transition-all duration-300 text-left"
+                                    className="group bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-100/50 transition-all duration-300 text-left"
                                 >
-                                    <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <Icon className="w-7 h-7 text-cyan-600" />
+                                    <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-600" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-600 transition-colors">
+                                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2 group-hover:text-cyan-600 transition-colors">
                                         {doc.title}
                                     </h3>
                                     <p className="text-sm text-slate-500">{doc.desc}</p>
@@ -607,27 +598,29 @@ export default function DocsPage() {
                     </div>
                 </div>
             ) : (
-                <div className="max-w-5xl mx-auto px-6 py-12">
-                    <button
-                        onClick={() => setSelected(null)}
-                        className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium mb-10 group"
-                    >
-                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        Back to Documentation
-                    </button>
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
+                    <div className="sticky top-0 z-10 bg-white pb-4">
+                        <button
+                            onClick={() => setSelected(null)}
+                            className="flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium mb-6 sm:mb-8 group"
+                        >
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            Back to Documentation
+                        </button>
+                    </div>
 
-                    <div className="bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200 overflow-hidden">
-                        <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-8 py-6">
-                            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                    <div className="bg-white rounded-2xl shadow-md shadow-slate-200/50 border border-slate-200 overflow-hidden">
+                        <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-6 sm:px-8 py-5 sm:py-6">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
                                 {(() => {
                                     const Icon = selected.icon
-                                    return <Icon className="w-8 h-8" />
+                                    return <Icon className="w-6 h-6 sm:w-8 sm:h-8" />
                                 })()}
                                 {selected.title}
                             </h1>
                         </div>
 
-                        <div className="p-10 md:p-12">
+                        <div className="p-6 sm:p-8 md:p-10 overflow-x-auto">
                             <MarkdownRenderer content={selected.content} />
                         </div>
                     </div>
