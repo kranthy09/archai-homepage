@@ -1,7 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { FileText, Code, Layout, ArrowLeft, Sparkles } from 'lucide-react'
+import { useState, ReactNode } from 'react'
+import { FileText, Code, Layout, ArrowLeft, Sparkles, LucideIcon } from 'lucide-react'
+
+interface Doc {
+    id: string
+    icon: LucideIcon
+    title: string
+    content: string
+    desc: string
+}
 
 const STRUCTURE_MD = `## Root Architecture
 
@@ -451,27 +459,27 @@ async def delete_{{ENDPOINT_NAME}}(
     return success_response(message="Deleted successfully")
 \`\`\``
 
-const docs = [
+const docs: Doc[] = [
     { id: 'structure', icon: Layout, title: 'Structure.md', content: STRUCTURE_MD, desc: 'System architecture blueprint' },
     { id: 'features', icon: FileText, title: 'Features.md', content: FEATURES_MD, desc: 'Feature specifications' },
     { id: 'templates', icon: Code, title: 'Templates.md', content: TEMPLATES_MD, desc: 'Code generation patterns' }
 ]
 
-const FeatureSection = ({ label, children }) => (
+const FeatureSection = ({ label, children }: { label: string; children: ReactNode }) => (
     <div className="border-l-4 border-cyan-400 bg-cyan-50/50 px-6 py-4 rounded-r mb-4">
         <div className="font-bold text-slate-800 text-lg mb-2">{label}</div>
         <div className="text-slate-700 space-y-1">{children}</div>
     </div>
 )
 
-const MarkdownRenderer = ({ content }) => {
+const MarkdownRenderer = ({ content }: { content: string }) => {
     const lines = content.split('\n')
     let inCodeBlock = false
-    let codeLines = []
-    let currentSection = null
-    const elements = []
+    const codeLines: string[] = []
+    let currentSection: { label: string; content: string[] } | null = null
+    const elements: ReactNode[] = []
 
-    lines.forEach((line, i) => {
+    lines.forEach((line: string, i: number) => {
         // Code block handling
         if (line.trim() === '```' || line.trim().startsWith('```')) {
             if (inCodeBlock) {
@@ -480,7 +488,7 @@ const MarkdownRenderer = ({ content }) => {
                         {codeLines.join('\n')}
                     </pre>
                 )
-                codeLines = []
+                codeLines.length = 0
                 inCodeBlock = false
             } else {
                 inCodeBlock = true
@@ -527,9 +535,10 @@ const MarkdownRenderer = ({ content }) => {
         }
         // Close feature section
         else if (line.trim() === '' && currentSection) {
+            const section = currentSection
             elements.push(
-                <FeatureSection key={`section-${i}`} label={currentSection.label}>
-                    {currentSection.content.map((item, j) => (
+                <FeatureSection key={`section-${i}`} label={section.label}>
+                    {section.content.map((item: string, j: number) => (
                         <div key={j} className="flex items-start gap-2">
                             {j > 0 && <span className="text-cyan-500 font-bold mt-0.5">•</span>}
                             <span>{item}</span>
@@ -557,7 +566,7 @@ const MarkdownRenderer = ({ content }) => {
 }
 
 export default function DocsPage() {
-    const [selected, setSelected] = useState(null)
+    const [selected, setSelected] = useState<Doc | null>(null)
 
     return (
         <div className="min-h-screen bg-white">
