@@ -14,7 +14,7 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-amber-300 text-transparent bg-clip-text"
         >
-          Your AI Architect for Full-Stack Development
+          AI Architect for Full-Stack Development
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
