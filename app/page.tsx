@@ -12,13 +12,13 @@ export default function HomePage() {
       {/* Logo Header */}
       <header className="w-full py-8 flex justify-center">
         <img
-          src="/archai-logo.png"
+          src="/archai-logo-nobg.png"
           alt="Archai"
-          className="h-32 w-auto"
+          className="h-48 w-auto"
         />
       </header>
       {/* Hero Section */}
-      <section className="text-center mt-2 mb-20 px-6 max-w-4xl">
+      <section className="text-center mb-20 px-6 max-w-4xl">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
